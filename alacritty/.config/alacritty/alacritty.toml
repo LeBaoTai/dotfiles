@@ -1,0 +1,21 @@
+[window]
+# Độ trong suốt của Terminal (0.0 là vô hình, 1.0 là đặc hoàn toàn)
+opacity = 0.98
+# Kích thước cửa sổ mặc định khi mở (Số cột x Số dòng chữ)
+dimensions = { columns = 100, lines = 28 }
+startup_mode = "Maximized"
+
+[font]
+# Cấu hình Font chữ Maple Mono NF CN theo yêu cầu
+normal = { family = "JetBrains Mono", style= "Regular"}
+bold = { family = "JetBrains Mono", style = "Bold" }
+italic = { family = "JetBrains Mono", style = "Italic" }
+bold_italic = { family = "JetBrains Mono", style = "Bold Italic" }
+
+# Kích thước chữ (Size 12)
+size = 12
+
+# Điều chỉnh khoảng cách dòng và ký tự (Mặc định là 0 nếu muốn chữ khít tự nhiên)
+
+offset = { x = 0, y = 2 }
+
