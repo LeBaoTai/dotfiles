@@ -1,0 +1,24 @@
+return {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+        "nvim-lua/plenary.nvim",
+        "MunifTanjim/nui.nvim",
+        "nvim-tree/nvim-web-devicons",
+    },
+    lazy = false,
+
+    config = function()
+        require('neo-tree').setup({
+            vim.keymap.set("n", "<leader>nt", "<Cmd>Neotree<CR>"),
+            popup_border_style = "rounded",
+            window = {
+                position = "float",
+                mappings = {
+                    ["z"] = "close_all_nodes",
+                    ["Z"] = "expand_all_nodes",
+                }
+            },
+        })
+    end
+}
