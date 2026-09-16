@@ -7,10 +7,10 @@ startup_mode = "Maximized"
 
 [font]
 # Cấu hình Font chữ Maple Mono NF CN theo yêu cầu
-normal = { family = "JetBrains Mono", style= "Regular"}
-bold = { family = "JetBrains Mono", style = "Bold" }
-italic = { family = "JetBrains Mono", style = "Italic" }
-bold_italic = { family = "JetBrains Mono", style = "Bold Italic" }
+normal = { family = "MapleMono NF CN", style= "Regular"}
+bold = { family = "MapleMono NF CN", style = "Bold" }
+italic = { family = "MapleMono NF CN", style = "Italic" }
+bold_italic = { family = "MapleMono NF CN", style = "Bold Italic" }
 
 # Kích thước chữ (Size 12)
 size = 12
