@@ -1,11 +1,11 @@
 -- Neovide setting
 if vim.g.neovide then
-	vim.g.neovide_cursor_animation_length = 0.0
-	vim.g.neovide_cursor_trail_size = 0.0
-	vim.g.neovide_cursor_vfx_mode = ""
-	vim.g.neovide_scroll_animation_length = 0.0
+    vim.g.neovide_cursor_animation_length = 0.0
+    vim.g.neovide_cursor_trail_size = 0.0
+    vim.g.neovide_cursor_vfx_mode = ""
+    vim.g.neovide_scroll_animation_length = 0.0
 
-	vim.o.guifont = "Maple Mono NF CN:h12"
+    vim.o.guifont = "Maple Mono NF CN:h12"
 end
 
 
@@ -50,7 +50,10 @@ vim.pack.add({
 
     -- lualine
     { src = 'https://github.com/nvim-tree/nvim-web-devicons', },
-    { src = 'https://github.com/nvim-lualine/lualine.nvim' }
+    { src = 'https://github.com/nvim-lualine/lualine.nvim' },
+
+    -- find and replace
+    { src = 'https://github.com/MagicDuck/grug-far.nvim' },
 })
 
 require('config.telescope')
@@ -60,3 +63,4 @@ require('config.conform')
 require('config.mini')
 require('config.theme')
 require('config.lualine')
+require('config.find_replace')
