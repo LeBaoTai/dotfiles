@@ -20,15 +20,7 @@ if status is-interactive
     alias .4='cd ../../../..'
     alias .5='cd ../../../../..'
 
-    #pacman and yay
-    alias pacs="sudo pacman -S"
-    alias pacr="sudo pacman -R"
-    alias pacrnc="sudo pacman -Rncs"
-    alias pacsyu='sudo pacman -Syu' # update only standard pkgs
-    alias pacsyyu='sudo pacman -Syyu' # Refresh pkglist & update standard pkgs
-    alias parsyu='paru -Syu --noconfirm' # update standard pkgs and AUR pkgs (paru)
-    alias unlock='sudo rm /var/lib/pacman/db.lck' # remove pacman lock
-    alias cleanup='sudo pacman -Rns (pacman -Qtdq)' # remove orphaned packages (DANGEROUS!)
+    #dnf
 
     # changing "ls" to aze
     alias ll='eza -alh --icons --color=always --group-directories-first' # long format

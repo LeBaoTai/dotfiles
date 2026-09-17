@@ -1,4 +1,4 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
 SETUVAR __fish_initialized:4300
-SETUVAR fish_user_paths:/home/lbt/zellij\x2dmint\x1e/home/lbt/\x2econfig/emacs/bin\x1e/home/lbt/lua\x2dlanguage\x2dserver/bin\x1e/usr/local/go/bin\x1e/home/lbt/go/bin
+SETUVAR fish_user_paths:/home/lbt/\x2ecargo/bin\x1e/home/lbt/zellij\x2dmint\x1e/home/lbt/\x2econfig/emacs/bin\x1e/home/lbt/lua\x2dlanguage\x2dserver/bin\x1e/usr/local/go/bin\x1e/home/lbt/go/bin
