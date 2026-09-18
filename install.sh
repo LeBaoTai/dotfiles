@@ -20,24 +20,24 @@ for item in "${CONFIGS[@]}"; do
     src="$DOTFILES_DIR/$item"
     dst="$TARGET_DIR/$item"
 
-    # Kiểm tra xem thư mục nguồn có tồn tại trong repo dotfiles không
+    # The config list in dot file or not
     if [ ! -d "$src" ]; then
         echo "⚠️  Cannot find the source folder: $src (skipped)"
         continue
     fi
 
-    # 1. Nếu đích đến đã tồn tại và là file/thư mục thật (không phải symlink) -> Tiến hành backup
+    # 1. Backup if the config is existing
     if [ -e "$dst" ] && [ ! -L "$dst" ]; then
         echo "📦 Doing backup: $item -> $BACKUP_DIR/"
         mkdir -p "$BACKUP_DIR"
         mv "$dst" "$BACKUP_DIR/"
-    # 2. Nếu đích đến đã là một symlink cũ -> Xóa symlink cũ để ghi đè link mới
+    # 2. Remove old symlink
     elif [ -L "$dst" ]; then
         echo "🗑️  Remove old link of : $item"
         rm "$dst"
     fi
 
-    # 3. Tạo liên kết tượng trưng (symlink)
+    # 3. Making symlik
     echo "🔗 Linking: $item"
     ln -s "$src" "$dst"
 done
