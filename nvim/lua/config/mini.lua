@@ -12,6 +12,5 @@ require('mini.splitjoin').setup({
 })
 
 require('mini.files').setup()
-vim.keymap.set('n', '<leader>-', function()
-    MiniFiles.open()
-end, { desc = 'Open MiniFiles' })
+vim.keymap.set('n', '<leader>-', function() MiniFiles.open() end, { desc = 'Open MiniFiles' })
+vim.keymap.set('n', '<leader>_', function() MiniFiles.open(vim.api.nvim_buf_get_name(0)) end, { desc = 'Open MiniFiles' })
