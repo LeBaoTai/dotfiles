@@ -10,6 +10,7 @@ end
 
 
 require('core.options')
+require('core.keymaps')
 
 vim.pack.add({
     -- blink cmp
