@@ -6,6 +6,7 @@ if vim.g.neovide then
     vim.g.neovide_scroll_animation_length = 0.0
 
     vim.o.guifont = "Maple Mono NF CN:h12"
+    vim.g.neovide_fullscreen = true
 end
 
 
