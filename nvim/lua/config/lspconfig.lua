@@ -64,4 +64,3 @@ vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
         })
     end,
 })
-
