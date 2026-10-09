@@ -4,8 +4,8 @@ if vim.g.neovide then
     vim.g.neovide_cursor_trail_size = 0.0
     vim.g.neovide_cursor_vfx_mode = ""
     vim.g.neovide_scroll_animation_length = 0.0
-
-    vim.o.guifont = "Maple Mono NF CN:h12"
+    vim.o.guifont = "Maple Mono NF CN:h11.2"
+    vim.o.linespace = 2
 end
 
 

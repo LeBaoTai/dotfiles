@@ -11,11 +11,7 @@ normal = { family = "MapleMono NF CN", style= "Regular"}
 bold = { family = "MapleMono NF CN", style = "Bold" }
 italic = { family = "MapleMono NF CN", style = "Italic" }
 bold_italic = { family = "MapleMono NF CN", style = "Bold Italic" }
-
+# Điều chỉnh khoảng cách dòng và ký tự (Mặc định là 0 nếu muốn chữ khít tự nhiên)
+offset = { x = 0, y = 2 }
 # Kích thước chữ (Size 12)
 size = 12
-
-# Điều chỉnh khoảng cách dòng và ký tự (Mặc định là 0 nếu muốn chữ khít tự nhiên)
-
-offset = { x = 0, y = 2 }
-
