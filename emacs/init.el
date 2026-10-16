@@ -52,6 +52,7 @@
   (setq inhibit-startup-screen t)
   (setq native-comp-async-report-warnings-errors 'silent)
   (setq warning-minimum-level :error)
+  (setq create-lockfiles nil)
 
   ;; ido mode
   (require 'ido)
@@ -64,16 +65,28 @@
 
   ;; Chỉ phóng to hết cỡ (Maximized) chứ không chiếm toàn màn hình (Fullscreen)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  
+  (global-display-line-numbers-mode 1)
   (setq display-line-numbers-type 'relative)
-  (setq display-line-numbers-width 4)
-  (setq display-line-numbers-grow-only t)
+  (setq display-line-numbers-current-absolute t)
+  (setq display-line-numbers-grow-only nil)
+  (setq display-line-numbers-width nil)   ; để Emacs tự tính độ rộng
   
-  ;; SỬA LỖI LỆCH CỘT: Ép dòng hiện tại sử dụng chung cách căn lề với các dòng khác
-  (set-face-attribute 'line-number-current-line nil
-                      :inherit 'line-number
-                      :background 'unspecified)
+  ;; 1. Đặt phông chữ mặc định toàn hệ thống (Cỡ chữ 13, nét Regular)
+  (set-face-attribute 'default nil
+                      :font "Maple Mono NF CN"
+                      :height 125          ; 130 tương đương cỡ chữ 13pt
+                      :weight 'regular)
 
+  ;; 2. Định dạng chữ nghiêng (Italic) cho phần chú thích (Comment)
+  (set-face-attribute 'font-lock-comment-face nil
+                      :slant 'italic)
+
+  ;; 3. Định dạng chữ nghiêng (Italic) cho các từ khóa lập trình (Keyword)
+  (set-face-attribute 'font-lock-keyword-face nil
+                      :slant 'italic)
+
+  ;; 4. Đảm bảo khi mở thêm Frame/Cửa sổ mới, phông chữ vẫn giữ nguyên cỡ 13
+  (add-to-list 'default-frame-alist '(font . "Maple Mono NF CN-12.5"))
   ;; Cấu hình khoảng cách giữa các dòng
   (setq-default line-spacing 0.12)
 
@@ -90,16 +103,7 @@
 
   ;; Không tự động hoàn thành khi nhấn Tab nếu minibuffer đang trống
   (setq tab-always-indent 'complete)
-
-  :bind
-  ;; Gán các phím tắt phóng to/thu nhỏ chữ và reset về mặc định
-  (("C-=" . text-scale-increase)
-   ("C--" . text-scale-decrease)
-   ("C-0" . (lambda () (interactive) (text-scale-adjust 0)))
-   ("<C-wheel-up>" . text-scale-increase)
-   ("<C-wheel-down>" . text-scale-decrease))
-
-  :config
+  
   ;; Ẩn các thanh công cụ để giao diện sạch sẽ, tối giản
   (menu-bar-mode -1)            ; Ẩn thanh menu
   (tool-bar-mode -1)            ; Ẩn thanh công cụ
@@ -108,12 +112,32 @@
 
   ;; Bật chế độ tự động xuống dòng trực quan toàn cục
   (global-visual-line-mode t)
-
+  
   ;; Tự động bật số dòng (tương đối) cho các mode lập trình, văn bản, cấu hình
   (dolist (mode '(text-mode-hook
                   prog-mode-hook
                   conf-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 1)))))
+    (add-hook mode (lambda () (display-line-numbers-mode 1))))
+
+  ;; Tự reload file khi nó bị thay đổi bên ngoài Emacs
+  (global-auto-revert-mode 1)
+
+  ;; Tự refresh cả Dired (và các buffer không phải file)
+  (setq global-auto-revert-non-file-buffers t)
+
+  ;; Không hiện thông báo "Reverting buffer..." mỗi lần refresh
+  (setq auto-revert-verbose nil)
+
+  :bind
+  ;; Gán các phím tắt phóng to/thu nhỏ chữ và reset về mặc định
+  (("<escape>" . keyboard-escape-quit)
+   ("M-o" . other-window)
+   ("M-;" . execute-extended-command)
+   ("C-=" . text-scale-increase)
+   ("C--" . text-scale-decrease)
+   ("C-0" . (lambda () (interactive) (text-scale-set 0)))
+   ("<C-wheel-up>" . text-scale-increase)
+   ("<C-wheel-down>" . text-scale-decrease)))
 
 ;; 4. Cài đặt và cấu hình Marginalia (Thêm chú thích chi tiết cho danh sách)
 (use-package marginalia
@@ -156,62 +180,23 @@
   :straight t
   :hook (dired-mode . nerd-icons-dired-mode))
 
-;; ==========================================
-;; CẤU HÌNH PHÔNG CHỮ & GIAO DIỆN (THEME)
-;; ==========================================
-(set-face-attribute 'default nil
-  :font "Maple Mono NF CN"
-  :height 115
-  :weight 'regular)
-(set-face-attribute 'font-lock-comment-face nil
-  :slant 'italic)
-(set-face-attribute 'font-lock-keyword-face nil
-  :slant 'italic)
-
-(add-to-list 'default-frame-alist '(font . "Maple Mono NF CN-11"))
-
+;; =============================================================================
+;; THEME
+;; =============================================================================
 (use-package doom-themes
   :straight t
   :config
   (load-theme 'doom-one t)
+  (set-face-attribute 'line-number-current-line nil
+                    :inherit nil
+                    :foreground "#ff9e64"
+                    :background 'unspecified
+                    :box nil
+                    :underline nil
+                    :overline nil
+                    :inverse-video nil
+                    :weight 'bold)
   (doom-themes-org-config))
-
-(use-package general
-  :ensure t
-  :config
-  ;; 1. Khởi tạo phím đầu mối (Leader Key)
-  (general-create-definer my-leader-def
-    :keymaps 'override
-    :states '(normal visual) ; Hỗ trợ tốt nếu sau này bạn dùng cả Evil/Vim mode
-    :prefix "SPC"                       ; Phím Leader chính: Space
-    :non-normal-prefix "SPC")
-
-  ;; 2. Định nghĩa sơ đồ phím tắt (Keymap) trực quan theo nhóm
-  (my-leader-def
-    ""     '(nil :which-key "Phím Leader") ; Định nghĩa gốc
-
-    "SPC" '(execute-extended-command :wk "M-x")
-
-    ;; --- NHÓM QUẢN LÝ BUFFER (Bấm SPC b ...) ---
-    "b" '(:ignore t :wk "buffer")
-    "bb" '(switch-to-buffer :wk "Switch buffer")
-    "bi" '(ibuffer :wk "Ibuffer")
-    "bk" '(kill-this-buffer :wk "Kill this buffer")
-    "bn" '(next-buffer :wk "Next buffer")
-    "bp" '(previous-buffer :wk "Previous buffer")
-    "br" '(revert-buffer :wk "Reload buffer")
-    "bs" '(save-buffer :wk "Save buffer")
-
-    ;; --- NHÓM QUẢN LÝ FILE (Bấm SPC f ...) ---
-    "f"   '(:ignore t :which-key "file")
-    "ff"  '(find-file :which-key "Finf/Open file")
-
-    ;; --- Dianostics ---
-    "fd"  '(flymake-show-buffer-diagnostics :which-key "Flymake diagnostics")
-
-    ;; Reload config file
-    "h r r" '(reload-init-file :wk "Reload emacs config")))
-
 
 ;; =============================================================================
 ;; CẤU HÌNH HỆ THỐNG LSP (EGLOT TÍCH HỢP SẴN)
@@ -241,7 +226,6 @@
               ("M-n" . flymake-goto-next-error)
               ("M-p" . flymake-goto-prev-error)))
 
-
 ;; =============================================================================
 ;; 1. CẤU HÌNH GOLANG
 ;; =============================================================================
@@ -267,7 +251,6 @@
               (setq-local tab-width 2)
               (setq-local indent-tabs-mode nil))))
 
-
 ;; =============================================================================
 ;; 3. CẤU HÌNH YAML & KUBERNETES
 ;; =============================================================================
@@ -283,7 +266,6 @@
   ;; Nhận diện file cấu hình Kubernetes (nếu file có chữ k8s hoặc deployment, v.v...)
   (add-to-list 'auto-mode-alist '("\\.k8s\\.yaml\\'" . yaml-mode))
   (add-to-list 'auto-mode-alist '("deployment\\.yaml\\'" . yaml-mode)))
-
 
 ;; =============================================================================
 ;; CẤU HÌNH GIAO DIỆN TỰ ĐỘNG HOÀN THÀNH CODE (CORFU AUTO-COMPLETE)
@@ -309,14 +291,10 @@
     ;; Nhấn Escape để hủy/đóng bảng gợi ý quay về Normal Mode mượt mà
     (define-key corfu-map (kbd "<escape>") 'corfu-quit)))
 
-
-
-
 ;; ==========================================
 ;; CẤU HÌNH COMPILATION MODE
 ;; ==========================================
 
 (require 'ansi-color)
-
 ;; Hiển thị đúng màu ANSI trong *compilation*
 (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)

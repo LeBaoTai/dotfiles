@@ -33,11 +33,12 @@ alias .4='cd ../../../..'
 alias .5='cd ../../../../../'
 
 # Thay thế lệnh "ls" bằng công cụ "eza"
-alias ll='eza -alh --icons --color=always --group-directories-first' # Định dạng danh sách dài
+#alias ll='eza -alh --icons --color=always --group-directories-first' # Định dạng danh sách dài
 alias la='eza -a --icons --color=always --group-directories-first'  # Hiển thị tất cả file/thư mục
 alias ls='eza -lh --icons --color=always --group-directories-first'  # Danh sách rút gọn thông thường
 alias lt='eza -aTh --icons --color=always --group-directories-first' # Hiển thị dạng cây (Tree)
 alias l.='eza -a | egrep "^\."'
+alias ll='eza -alhi --absolute --icons --color=always --group-directories-first' # Hiển thị inode, số link và đường dẫn tuyệt đối của Symlink
 
 # Lấy thông báo lỗi hệ thống từ journalctl
 alias jctl="journalctl -p 3 -xb"
@@ -53,6 +54,7 @@ alias cl="clear"
 alias dk="docker"
 alias em='emacsclient -c -n'
 alias rsemacs='pkill -f emacs && emacs --daemon'
+alias k='kubectl'
 
 # Khởi chạy Containerlab qua môi trường Docker
 alias containerlab='docker run --rm -it --privileged \
@@ -66,3 +68,4 @@ alias containerlab='docker run --rm -it --privileged \
     -w "$(pwd)" \
     ghcr.io/srl-labs/clab bash' #
 source /home/lbt/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export KUBECONFIG=~/.kube/config
