@@ -74,7 +74,7 @@
   ;; 1. Đặt phông chữ mặc định toàn hệ thống (Cỡ chữ 13, nét Regular)
   (set-face-attribute 'default nil
                       :font "Maple Mono NF CN"
-                      :height 140
+                      :height 130
                       :weight 'regular)
 
   ;; 2. Định dạng chữ nghiêng (Italic) cho phần chú thích (Comment)
@@ -86,7 +86,7 @@
                       :slant 'italic)
 
   ;; 4. Đảm bảo khi mở thêm Frame/Cửa sổ mới, phông chữ vẫn giữ nguyên cỡ 13
-  (add-to-list 'default-frame-alist '(font . "Maple Mono NF CN-14"))
+  (add-to-list 'default-frame-alist '(font . "Maple Mono NF CN-13"))
   ;; Cấu hình khoảng cách giữa các dòng
   (setq-default line-spacing 0.12)
 
@@ -212,12 +212,20 @@
   ;; Cấu hình thời gian trễ phản hồi của LSP xuống thấp (giảm giật lag)
   (setq eglot-connect-timeout 10)
   (setq eglot-events-buffer-size 0) ; Tắt logging để tăng hiệu năng gõ code
+  ;; Format + organize imports khi lưu file Go
+  (defun my/go-format-and-organize-imports ()
+    (when (and (derived-mode-p 'go-mode)
+               (eglot-managed-p))
+      ;; Xóa import unused, thêm import cần thiết, sắp xếp import
+      (condition-case nil
+          (eglot-code-action-organize-imports nil)
+        (error nil))
 
-  ;; Tự động chạy format code (như gofmt) và sửa các dòng import mỗi khi lưu file (Ctrl+x Ctrl+s)
+      ;; Format code bằng gopls
+      (eglot-format-buffer)))
+
   (add-hook 'before-save-hook
-            (lambda ()
-              (when (eglot-managed-p)
-                (eglot-format-buffer)))))
+            #'my/go-format-and-organize-imports))
 
 ;; Cài đặt gói hiển thị thông tin lỗi ngay dưới dòng code (Flymake trực quan)
 (use-package flymake
@@ -237,7 +245,6 @@
             (lambda ()
               (setq tab-width 4)
               (setq indent-tabs-mode t))))
-
 
 ;; =============================================================================
 ;; 2. CẤU HÌNH TERRAFORM
