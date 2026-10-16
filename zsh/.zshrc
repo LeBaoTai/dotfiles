@@ -69,3 +69,4 @@ alias containerlab='docker run --rm -it --privileged \
     ghcr.io/srl-labs/clab bash' #
 source /home/lbt/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export KUBECONFIG=~/.kube/config
+export PATH="$(go env GOPATH)/bin:$PATH"

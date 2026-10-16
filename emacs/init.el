@@ -74,7 +74,7 @@
   ;; 1. Đặt phông chữ mặc định toàn hệ thống (Cỡ chữ 13, nét Regular)
   (set-face-attribute 'default nil
                       :font "Maple Mono NF CN"
-                      :height 125          ; 130 tương đương cỡ chữ 13pt
+                      :height 140
                       :weight 'regular)
 
   ;; 2. Định dạng chữ nghiêng (Italic) cho phần chú thích (Comment)
@@ -86,7 +86,7 @@
                       :slant 'italic)
 
   ;; 4. Đảm bảo khi mở thêm Frame/Cửa sổ mới, phông chữ vẫn giữ nguyên cỡ 13
-  (add-to-list 'default-frame-alist '(font . "Maple Mono NF CN-12.5"))
+  (add-to-list 'default-frame-alist '(font . "Maple Mono NF CN-14"))
   ;; Cấu hình khoảng cách giữa các dòng
   (setq-default line-spacing 0.12)
 
