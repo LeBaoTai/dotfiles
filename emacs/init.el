@@ -35,7 +35,6 @@
   (vertico-resize nil)     ; Cố định chiều cao minibuffer để giao diện không bị giật lag
   (vertico-cycle t))       ; Cuộn tròn danh sách khi đi hết hàng
 
-
 ;; 2. Cài đặt và cấu hình Orderless (Bộ lọc tìm kiếm linh hoạt)
 (use-package orderless
   :straight t
@@ -53,6 +52,9 @@
   (setq native-comp-async-report-warnings-errors 'silent)
   (setq warning-minimum-level :error)
   (setq create-lockfiles nil)
+
+  ;; turn on edit mode when open compile & recompile
+  (setq compilation-read-command t)
 
   ;; ido mode
   (require 'ido)
@@ -131,6 +133,7 @@
   :bind
   ;; Gán các phím tắt phóng to/thu nhỏ chữ và reset về mặc định
   (("<escape>" . keyboard-escape-quit)
+   ("C-c C-l" . duplicate-dwim)
    ("M-o" . other-window)
    ("M-;" . execute-extended-command)
    ("C-=" . text-scale-increase)
@@ -209,23 +212,27 @@
    (terraform-mode . eglot-ensure)
    (yaml-mode . eglot-ensure))
   :config
+ 
+  ;; --- SỬA THÀNH ĐOẠN NÀY ĐỂ TRUYỀN THAM SỐ "serve" ---
+  (add-to-list 'eglot-server-programs
+               '(terraform-mode . ("terraform-ls" "serve")))
+  
   ;; Cấu hình thời gian trễ phản hồi của LSP xuống thấp (giảm giật lag)
   (setq eglot-connect-timeout 10)
-  (setq eglot-events-buffer-size 0) ; Tắt logging để tăng hiệu năng gõ code
-  ;; Format + organize imports khi lưu file Go
-  (defun my/go-format-and-organize-imports ()
-    (when (and (derived-mode-p 'go-mode)
-               (eglot-managed-p))
-      ;; Xóa import unused, thêm import cần thiết, sắp xếp import
-      (condition-case nil
-          (eglot-code-action-organize-imports nil)
-        (error nil))
-
-      ;; Format code bằng gopls
+  ;; (setq eglot-events-buffer-size 0) ; Tắt logging để tăng hiệu năng gõ code
+  (setq eglot-events-buffer-config '(:size 2000000 :format full))
+  ;; Hàm tự động format khi lưu file cho mọi ngôn ngữ dùng Eglot
+  (defun my/eglot-format-on-save ()
+    (when (eglot-managed-p)
+      ;; 1. Chỉ chạy organize imports nếu là file Go (Terraform không cần/không hỗ trợ cái này)
+      (when (derived-mode-p 'go-mode)
+        (ignore-errors
+          (eglot-code-action-organize-imports nil)))
+      
+      ;; 2. Tự động format buffer cho TẤT CẢ các mode được Eglot quản lý (Go, Terraform, YAML...)
       (eglot-format-buffer)))
 
-  (add-hook 'before-save-hook
-            #'my/go-format-and-organize-imports))
+  (add-hook 'before-save-hook #'my/eglot-format-on-save))
 
 ;; Cài đặt gói hiển thị thông tin lỗi ngay dưới dòng code (Flymake trực quan)
 (use-package flymake
@@ -287,21 +294,34 @@
   (corfu-auto-delay 0.0)         ; Thời gian chờ bật lên bằng 0 (hiện lập tức)
   (corfu-auto-prefix 1)          ; Chỉ cần gõ từ 1 ký tự là bảng gợi ý đã hiện ra ngay
   (corfu-cycle t)                ; Cho phép cuộn tròn danh sách lựa chọn gợi ý
-  (corfu-quit-no-match 'separator) ; Tự động đóng bảng nếu gõ ký tự không khớp
-  
-  :config
-  ;; Tích hợp danh sách phím tắt điều hướng trong bảng gợi ý cho Evil Mode
-  ;; Giúp bạn dùng Ctrl+n (Next) và Ctrl+p (Previous) để chọn hàm/biến rất nhanh
-  (with-eval-after-load 'evil
-    (define-key corfu-map (kbd "C-n") 'corfu-next)
-    (define-key corfu-map (kbd "C-p") 'corfu-previous)
-    ;; Nhấn Escape để hủy/đóng bảng gợi ý quay về Normal Mode mượt mà
-    (define-key corfu-map (kbd "<escape>") 'corfu-quit)))
+  (corfu-quit-no-match 'separator)) ; Tự động đóng bảng nếu gõ ký tự không khớp
 
-;; ==========================================
-;; CẤU HÌNH COMPILATION MODE
-;; ==========================================
+(use-package cape
+  :straight t)
+
+(advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+
 
 (require 'ansi-color)
 ;; Hiển thị đúng màu ANSI trong *compilation*
 (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
+
+
+(use-package magit
+  :ensure t)
+
+(use-package multiple-cursors
+  :ensure t
+  :bind(("C-S-c C-S-c" . mc/edit-lines)
+	 ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-c C-<" . mc/mark-all-like-this)))
+
+
+;; PATH for emacs
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (setq exec-path-from-shell-shell-name "zsh")
+  (setq exec-path-from-shell-arguments '("-l" "-i"))
+  (exec-path-from-shell-initialize))
