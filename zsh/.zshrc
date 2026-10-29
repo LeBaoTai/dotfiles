@@ -34,11 +34,11 @@ alias .5='cd ../../../../../'
 
 # Thay thế lệnh "ls" bằng công cụ "eza"
 #alias ll='eza -alh --icons --color=always --group-directories-first' # Định dạng danh sách dài
-alias la='eza -a --icons --color=always --group-directories-first'  # Hiển thị tất cả file/thư mục
-alias ls='eza -lh --icons --color=always --group-directories-first'  # Danh sách rút gọn thông thường
-alias lt='eza -aTh --icons --color=always --group-directories-first' # Hiển thị dạng cây (Tree)
+alias la='eza -a --icons=always --color=always --group-directories-first'  # Hiển thị tất cả file/thư mục
+alias ls='eza -lh --icons=always --color=always --group-directories-first'  # Danh sách rút gọn thông thường
+alias lt='eza -aTh --icons=always --color=always --group-directories-first' # Hiển thị dạng cây (Tree)
 alias l.='eza -a | egrep "^\."'
-alias ll='eza -alhi --absolute --icons --color=always --group-directories-first' # Hiển thị inode, số link và đường dẫn tuyệt đối của Symlink
+alias ll='eza -alhi --absolute --icons=always --color=always --group-directories-first' # Hiển thị inode, số link và đường dẫn tuyệt đối của Symlink
 
 # Lấy thông báo lỗi hệ thống từ journalctl
 alias jctl="journalctl -p 3 -xb"
@@ -70,3 +70,5 @@ alias containerlab='docker run --rm -it --privileged \
 source /home/lbt/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export KUBECONFIG=~/.kube/config
 export PATH="$(go env GOPATH)/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/lua-language-server/bin:$PATH"
